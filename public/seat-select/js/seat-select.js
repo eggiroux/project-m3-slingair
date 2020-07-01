@@ -10,8 +10,8 @@ function populateFlights() {
     method: "GET",
   })
     .then((res) => res.json())
-    .then((flightNumber) => {
-      flightNumber.forEach((number) => {
+    .then((allFlights) => {
+      allFlights.forEach((number) => {
         thisFlight = document.createElement("option");
         thisFlight.innerText = number;
         flightInput.appendChild(thisFlight);
@@ -21,7 +21,6 @@ function populateFlights() {
 populateFlights();
 
 const renderSeats = (seatData) => {
-  console.log(seatData);
   document.querySelector(".form-container").style.display = "block";
   //clear the existing seats if the flight is changed
   let seatsDivChildren = seatsDiv.children;
@@ -68,7 +67,7 @@ const renderSeats = (seatData) => {
         }
       });
       document.getElementById(seat.value).classList.add("selected");
-      document.getElementById("seat-number").innerText = `(${selection})`;
+      document.getElementById("seat-number").innerText = ` (${selection})`;
       confirmButton.disabled = false;
     };
   });
@@ -97,12 +96,25 @@ const handleConfirmSeat = (event) => {
     method: "POST",
     body: JSON.stringify({
       givenName: document.getElementById("givenName").value,
+      surname: document.getElementById("surname").value,
+      email: document.getElementById("email").value,
+      flight: flightInput.value,
+      seat: selection,
     }),
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-  });
+  })
+    .then((res) => {
+      console.log(res);
+      return res.json();
+    })
+    .then((data) => {
+      if (data.status === "success") {
+        window.location = `./confirmed.html?reservationID=${data.id}`;
+      }
+    });
 };
 
 flightInput.addEventListener("change", toggleFormContent);

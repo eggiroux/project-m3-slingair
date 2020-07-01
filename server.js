@@ -3,25 +3,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
-const { flights } = require("./test-data/flightSeating");
+
+const {
+  handleFlightData,
+  handleFlightList,
+  handleAddUser,
+} = require("./serverHandlers");
 
 const PORT = process.env.PORT || 8000;
-
-const handleFlight = (req, res) => {
-  const { flightNumber } = req.params;
-  // get all flight numbers
-  const allFlights = Object.keys(flights);
-  // is flightNumber in the array?
-  console.log("REAL FLIGHT: ", allFlights.includes(flightNumber));
-  const selectedFlightSeating = flights[flightNumber];
-  res.status(200).send(selectedFlightSeating);
-};
-
-const handleFlightList = (req, res) => {
-  const allFlights = Object.keys(flights);
-  console.log(allFlights);
-  res.status(200).send(allFlights);
-};
 
 express()
   .use(function (req, res, next) {
@@ -39,9 +28,9 @@ express()
 
   // endpoints
   .get("/flightList", handleFlightList)
-  .get("/flights/:flightNumber", handleFlight)
+  .get("/flights/:flightNumber", handleFlightData)
   //.get('users/', findUsers)
-  //.post('users/', addUser)
+  .post("/users", handleAddUser)
 
   .use((req, res) => res.send("Not Found"))
   .listen(PORT, () => console.log(`Listening on port ${PORT}`));
