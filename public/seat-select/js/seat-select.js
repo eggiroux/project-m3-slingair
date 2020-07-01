@@ -10,18 +10,27 @@ function populateFlights() {
     method: "GET",
   })
     .then((res) => res.json())
-    .then((seatNumbers) => {
-      seatNumbers.forEach((number) => {
-        thisSeat = document.createElement("option");
-        thisSeat.innerText = number;
-        flightInput.appendChild(thisSeat);
+    .then((flightNumber) => {
+      flightNumber.forEach((number) => {
+        thisFlight = document.createElement("option");
+        thisFlight.innerText = number;
+        flightInput.appendChild(thisFlight);
       });
     });
 }
 populateFlights();
 
-const renderSeats = () => {
+const renderSeats = (seatData) => {
+  console.log(seatData);
   document.querySelector(".form-container").style.display = "block";
+  //clear the existing seats if the flight is changed
+  let seatsDivChildren = seatsDiv.children;
+  let arrayLength = seatsDivChildren.length;
+
+  for (let i = 0; i < arrayLength; i++) {
+    //console.log("removing: ", seatsDivChildren[0]);
+    seatsDiv.removeChild(seatsDivChildren[0]);
+  }
 
   const alpha = ["A", "B", "C", "D", "E", "F"];
   for (let r = 1; r < 11; r++) {
@@ -33,12 +42,18 @@ const renderSeats = () => {
       const seatNumber = `${r}${alpha[s - 1]}`;
       const seat = document.createElement("li");
 
+      let seatStatus = seatData.find((seat) => seat.id === seatNumber);
+
       // Two types of seats to render
       const seatOccupied = `<li><label class="seat"><span id="${seatNumber}" class="occupied">${seatNumber}</span></label></li>`;
       const seatAvailable = `<li><label class="seat"><input type="radio" name="seat" value="${seatNumber}" /><span id="${seatNumber}" class="avail">${seatNumber}</span></label></li>`;
 
-      // TODO: render the seat availability based on the data...
-      seat.innerHTML = seatAvailable;
+      if (seatStatus.isAvailable) {
+        seat.innerHTML = seatAvailable;
+      } else {
+        seat.innerHTML = seatOccupied;
+      }
+
       row.appendChild(seat);
     }
   }
@@ -61,18 +76,18 @@ const renderSeats = () => {
 
 const toggleFormContent = (event) => {
   const flightNumber = flightInput.value;
-  console.log("toggleFormContent: ", flightNumber);
+  //console.log("toggleFormContent: ", flightNumber);
   fetch(`/flights/${flightNumber}`)
     .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
+    .then((seatData) => {
+      //console.log(seatData);
+      renderSeats(seatData);
     });
   // TODO: contact the server to get the seating availability
   //      - only contact the server if the flight number is this format 'SA###'.
   //      - Do I need to create an error message if the number is not valid?
 
   // TODO: Pass the response data to renderSeats to create the appropriate seat-type.
-  renderSeats();
 };
 
 const handleConfirmSeat = (event) => {

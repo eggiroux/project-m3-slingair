@@ -13,12 +13,14 @@ const handleFlight = (req, res) => {
   const allFlights = Object.keys(flights);
   // is flightNumber in the array?
   console.log("REAL FLIGHT: ", allFlights.includes(flightNumber));
+  const selectedFlightSeating = flights[flightNumber];
+  res.status(200).send(selectedFlightSeating);
 };
 
 const handleFlightList = (req, res) => {
-  let flightNumbers = Object.keys(flights);
-  console.log(flightNumbers);
-  res.status(200).send(flightNumbers);
+  const allFlights = Object.keys(flights);
+  console.log(allFlights);
+  res.status(200).send(allFlights);
 };
 
 express()
