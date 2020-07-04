@@ -36,13 +36,24 @@ const handleAddUser = (req, res) => {
 };
 
 const handleReservationInfo = (req, res) => {
-  const reservationId = req.params.id;
+  const identifier = req.params.identifier;
+  let reservationObject = {};
 
-  console.log(reservationId);
+  console.log(identifier);
 
-  let reservationObject = reservations.find(
-    (item) => item.id === reservationId
-  );
+  if (identifier.split("").includes("@")) {
+    //find by email
+    reservationObject = reservations.find((item) => item.email === identifier);
+    if (!reservationObject) {
+      res.status(404).send({ status: "error", error: "bad id" });
+      return;
+    }
+    res.status(200).send(reservationObject);
+    return;
+  }
+
+  //else find by id
+  reservationObject = reservations.find((item) => item.id === identifier);
 
   if (!reservationObject) {
     res.status(404).send({ status: "error", error: "bad id" });

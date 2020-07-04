@@ -30,8 +30,7 @@ express()
   // endpoints
   .get("/flightList", handleFlightList)
   .get("/flights/:flightNumber", handleFlightData)
-  .get("/reservations/:id", handleReservationInfo)
-  //.get('users/', findUsers)
+  .get("/reservations/:identifier", handleReservationInfo)
   .post("/users", handleAddUser)
 
   .use((req, res) => res.send("Not Found"))

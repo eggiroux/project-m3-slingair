@@ -11,11 +11,24 @@
             <header class='header'>
                 <h1 class='header-logo'>Air Slingshot</h1>
             </div>
-            <div class="content">
+            <form class="view-reservation">
+                <input type="email" name="userEmailInput" class="userEmailInput" placeholder="email@mail.com"/>
+                <button type="submit" class="button confirm" id="submitButton">Find Reservation</button>
+              </form>
 
+            <div class="content confirmation view" id="reservationData">
+
+                <div class="user">
+                    <p class="message">Here is your reservation information! </p>
+                    <ul class="user-info">
+                        <li>Flight #:<span id="flight"></span> seat #: <span id="seat"></span></li>
+                        <li>Name:<span id="name"></span></li>
+                        <li>Email:<span id="email"></span></li>
+                    </ul>
+                </div>
+                <div class="tombstone"></div>
             </div>
         </div>
-        <p class='footer-logo'>The only way to fly!</p>
         <script src="./js/view-reservation.js"></script>
     </body>
 </html>
