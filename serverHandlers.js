@@ -22,8 +22,6 @@ const handleAddUser = (req, res) => {
   const reservationData = req.body;
   const reservationId = uuidv4();
 
-  console.log(flights[reservationData.flight]);
-
   let newReservation = {
     id: reservationId,
     flight: reservationData.flight,
@@ -39,7 +37,6 @@ const handleAddUser = (req, res) => {
       item.isAvailable = false;
     }
   });
-  console.log(flights[reservationData.flight]);
   console.log(reservationId);
   res.status(200).send({ status: "success", id: reservationId });
 };
