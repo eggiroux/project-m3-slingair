@@ -8,6 +8,7 @@ const {
   handleFlightData,
   handleFlightList,
   handleAddUser,
+  handleReservationInfo,
 } = require("./serverHandlers");
 
 const PORT = process.env.PORT || 8000;
@@ -29,6 +30,7 @@ express()
   // endpoints
   .get("/flightList", handleFlightList)
   .get("/flights/:flightNumber", handleFlightData)
+  .get("/reservations/:id", handleReservationInfo)
   //.get('users/', findUsers)
   .post("/users", handleAddUser)
 

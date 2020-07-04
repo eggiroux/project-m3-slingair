@@ -5,28 +5,24 @@ const confirmButton = document.getElementById("confirm-button");
 let selection = "";
 
 //get all flights numbers and add them to the selector
-function populateFlights() {
-  fetch("/flightList", {
-    method: "GET",
-  })
-    .then((res) => res.json())
-    .then((allFlights) => {
-      allFlights.forEach((number) => {
-        thisFlight = document.createElement("option");
-        thisFlight.innerText = number;
-        flightInput.appendChild(thisFlight);
-      });
-    });
-}
+const populateFlights = async () => {
+  const response = await fetch("/flightList");
+  const allFlights = await response.json();
+
+  allFlights.forEach((number) => {
+    thisFlight = document.createElement("option");
+    thisFlight.innerText = number;
+    flightInput.appendChild(thisFlight);
+  });
+};
+
 populateFlights();
 
 const renderSeats = (seatData) => {
   document.querySelector(".form-container").style.display = "block";
   //clear the existing seats if the flight is changed
   let seatsDivChildren = seatsDiv.children;
-  let arrayLength = seatsDivChildren.length;
-
-  for (let i = 0; i < arrayLength; i++) {
+  while (seatsDivChildren.length > 0) {
     //console.log("removing: ", seatsDivChildren[0]);
     seatsDiv.removeChild(seatsDivChildren[0]);
   }
@@ -73,26 +69,18 @@ const renderSeats = (seatData) => {
   });
 };
 
-const toggleFormContent = (event) => {
+const toggleFormContent = async (event) => {
   const flightNumber = flightInput.value;
   //console.log("toggleFormContent: ", flightNumber);
-  fetch(`/flights/${flightNumber}`)
-    .then((res) => res.json())
-    .then((seatData) => {
-      //console.log(seatData);
-      renderSeats(seatData);
-    });
-  // TODO: contact the server to get the seating availability
-  //      - only contact the server if the flight number is this format 'SA###'.
-  //      - Do I need to create an error message if the number is not valid?
-
-  // TODO: Pass the response data to renderSeats to create the appropriate seat-type.
+  const response = await fetch(`/flights/${flightNumber}`);
+  const seatData = await response.json();
+  renderSeats(seatData);
 };
 
-const handleConfirmSeat = (event) => {
+const handleConfirmSeat = async (event) => {
   event.preventDefault();
-  // TODO: everything in here!
-  fetch("/users", {
+
+  const response = await fetch("/users", {
     method: "POST",
     body: JSON.stringify({
       givenName: document.getElementById("givenName").value,
@@ -105,16 +93,11 @@ const handleConfirmSeat = (event) => {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-  })
-    .then((res) => {
-      console.log(res);
-      return res.json();
-    })
-    .then((data) => {
-      if (data.status === "success") {
-        window.location = `./confirmed.html?reservationID=${data.id}`;
-      }
-    });
+  });
+  const data = await response.json();
+  if (data.status === "success") {
+    window.location = `./confirmed.html?reservationID=${data.id}`;
+  }
 };
 
 flightInput.addEventListener("change", toggleFormContent);

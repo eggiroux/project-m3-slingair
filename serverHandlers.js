@@ -35,4 +35,25 @@ const handleAddUser = (req, res) => {
   res.status(200).send({ status: "success", id: reservationId });
 };
 
-module.exports = { handleFlightData, handleFlightList, handleAddUser };
+const handleReservationInfo = (req, res) => {
+  const reservationId = req.params.id;
+
+  console.log(reservationId);
+
+  let reservationObject = reservations.find(
+    (item) => item.id === reservationId
+  );
+
+  if (!reservationObject) {
+    res.status(404).send({ status: "error", error: "bad id" });
+    return;
+  }
+  res.status(200).send(reservationObject);
+};
+
+module.exports = {
+  handleFlightData,
+  handleFlightList,
+  handleAddUser,
+  handleReservationInfo,
+};
