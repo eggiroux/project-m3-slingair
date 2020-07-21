@@ -6,8 +6,6 @@ const emailInputElement = document.querySelector(".userEmailInput");
 const submitButton = document.querySelector("#submitButton");
 const reservationDataElement = document.getElementById("reservationData");
 
-const reservationId = window.location.search.split("=")[1];
-
 submitButton.addEventListener("click", async (event) => {
   event.preventDefault();
   const userEmail = emailInputElement.value;

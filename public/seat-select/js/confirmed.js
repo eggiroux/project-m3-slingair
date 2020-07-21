@@ -3,7 +3,9 @@ const seatElement = document.querySelector("#seat");
 const nameElement = document.querySelector("#name");
 const emailElement = document.querySelector("#email");
 
-const reservationId = window.location.search.split("=")[1];
+const url = new URL(window.location.href);
+const params = url.searchParams;
+const reservationId = params.get("reservationID");
 
 const getReservationData = async () => {
   const response = await fetch(`/reservations/${reservationId}`);
